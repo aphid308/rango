@@ -2,3 +2,6 @@
 *.db
 *.sqlite3
 *.py.swp
+*.py.so
+*.html.so
+*.html.swp
