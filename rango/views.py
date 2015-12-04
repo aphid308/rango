@@ -55,7 +55,7 @@ def add_page(request, category_name_slug):
         form = PageForm(request.POST)
         if form.is_valid():
             if cat:
-                page = form.save(commit=False)
+                page = form.save(commit=True)
                 page.category = cat
                 page.views = 0
                 page.save()
