@@ -95,3 +95,4 @@ TEMPLATE_DIRS = (
     TEMPLATE_PATH,
 )
 
+LOGIN_URL = '/rango/login/'
