@@ -139,3 +139,6 @@ def restricted(request):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/rango/')
+
+def about(request):
+    return render(request, 'rango/about.html', {})
