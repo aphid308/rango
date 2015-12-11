@@ -16,39 +16,37 @@ def index(request):
     page_list = Page.objects.order_by('-views')[:5]
     context_dict = {'categories': category_list, 'pages': page_list}
 
-    visits = int(request.COOKIES.get('visits', '1'))
-
+    visits = request.session.get('visits')
+    if not visits:
+        visits = 1
     reset_last_visit_time = False
-    response = render(request, 'rango/index.html', context_dict)
 
-    #does the cookie, last_visit, exit?
-    if 'last_visit' in request.COOKIES:
-        #it does get the value
-        last_visit = request.COOKIES['last_visit']
-        #cast it as a date time object
+    last_visit = request.session.get('last_visit')
+    if last_visit:
         last_visit_time = datetime.strptime(
             last_visit[:-7], "%Y-%m-%d %H:%M:%S"
         )
-
-        #if it's been more than a day since last visit
-        if (datetime.now() - last_visit_time).days > 0:
+        if (datetime.now() - last_visit_time).seconds > 5:
             visits = visits + 1
-            #flag up the last visit cookie to be updated
             reset_last_visit_time = True
-
     else:
-        #cookie last visit does not exist so flag it to be set
         reset_last_visit_time = True
-        context_dict['visits'] = visits
-        #obtain our response object early so we can add cookie info
-        response = render(request, 'rango/index.html', context_dict)
 
     if reset_last_visit_time:
-        response.set_cookie('last_visit', datetime.now())
-        response.set_cookie('visits', visits)
+        request.session['last_visit'] = str(datetime.now())
+        request.session['visits'] = visits
 
-    #return response to user updating any cookies that need to be changed
+    context_dict['visits'] = visits
+    response = render(request, 'rango/index.html', context_dict)
+
     return response
+
+def about(request):
+    if request.session.get('visits'):
+        count = request.session.get('visits')
+    else:
+        count = 0
+    return render(request, 'rango/about.html', {'visits': count})
 
 def category(request, category_name_slug):
     context_dict = {}
@@ -173,5 +171,4 @@ def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/rango/')
 
-def about(request):
-    return render(request, 'rango/about.html', {})
+
