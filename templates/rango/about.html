@@ -2,6 +2,11 @@
 {% load staticfiles %}
 {% block title %}{{ category_name }}{% endblock %}
 {% block body_block %}
-<h1>Rango says: Here is the about page!</h1>
-You have visited the site {{ visits }} times!
+<div class="page-header">
+    <h1>Rango says: Here is the about page!</h1>
+</div>
+<div>
+    <p>You have visited the site <strong>{{ visits }} times.</strong>.</p>
+    <img width="90" height="100" src="{% static "images/scp.jpg" %}" alt="SCP Logo" /> <!-- New Line -->
+</div>
 {% endblock %}
